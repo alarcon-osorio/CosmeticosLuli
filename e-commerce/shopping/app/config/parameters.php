@@ -5,7 +5,7 @@
     'database_port' => '',
     'database_name' => 'u644237725_cosmeticos',
     'database_user' => 'u644237725_cosmeticos',
-    'database_password' => 'Jeison1010192548**',
+    'database_password' => 'password',
     'database_prefix' => 'ps_',
     'database_engine' => 'InnoDB',
     'mailer_transport' => 'smtp',
