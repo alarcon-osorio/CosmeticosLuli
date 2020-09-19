@@ -1,0 +1,339 @@
+(function(d, s) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if(__data.glua){
+        js = d.createElement(s);
+        js.src = 'https://www.googletagmanager.com/gtag/js?id='+__data.glua;
+        fjs.parentNode.insertBefore(js, fjs);
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', __data.glua);
+        if(__data.gstag&&__data.gstag.gstag) gtag('config', __data.gstag.gstag);
+        if(__data.glaw) gtag('config', __data.glaw);
+    }
+    var v = function(a, b, t) {
+        t=t||d;
+        t.addEventListener ? t.addEventListener(a, b, !1) : t.attachEvent && t.attachEvent("on" + a, b)
+    };
+    var ibjax = function (method,url,options) {
+        var xhr = new XMLHttpRequest();
+        options=options||{};
+        // xhr.open('GET', '/apiv2.0/share/link/{linkid}/info/{op}/idx/{idx}/'.Compile({linkid:linkid,op:op,idx:idx}));
+        xhr.open((method||'GET').toUpperCase(), url);
+        if(method=='POST') xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        // xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.responseType = 'text';
+        xhr.onload = function() {
+        };
+        xhr.onreadystatechange=function(){
+            if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                if(options.fn&&typeof options.fn == 'function'){
+                    options.fn(xhr.responseText)
+                }
+            }
+        };
+        xhr.onerror = function() {
+        };
+        try {
+            if(options.data){
+                var _data=[];
+                if(!options.data.push&&typeof options.data == 'Object'){
+                    for(var x in options.data){
+                        _data.push(x+'='+options.data[x]);
+                    }
+                    options.data=_data;
+                }
+            }else{
+                options.data=[];
+            }
+            xhr.send(encodeURI(options.data.join('&')));
+        } catch (e) {
+        }
+    };
+    function handleSubmit(evt) {
+        // subscribe, contact ...
+        if(evt.target.nodeName=="BUTTON"&&evt.target.parentElement.classList.contains('form-button')){
+            var pTar=evt.target.parentElement.parentElement.parentElement;
+            var email = pTar.querySelector('input[name=email]').value.trim();
+            var regEmail = /\w+([\w.-])*@\w+\.\w+[.|\w]*/;
+            if (regEmail.test(email) == false) {
+                swal('','Invalid email address','error');
+                return false;
+            }
+            if(pTar.classList.contains('form-subscribe')){
+                ibjax('POST','https://api.instabio.cc/apiv2.0/share/link/{linkid}/submit/subscribe/'.Compile({linkid:__data.bio.id}),
+                    {data:['email='+email,'name='+pTar.querySelector('input[name=fullname]').value,'title='+pTar.querySelector('.form-title span').innerHTML],
+                        fn:function (resp) {
+                            resp=JSON.parse(resp||'{}');
+                            if(resp.code==0) pTar.querySelector('.form-thanks').style.display='block';
+                        }})
+            }
+            if(pTar.classList.contains('form-contact')){
+                ibjax('POST','https://api.instabio.cc/apiv2.0/share/link/{linkid}/submit/contact/'.Compile({linkid:__data.bio.id}),
+                    {data:['email='+email,'name='+pTar.querySelector('input[name=fullname]').value,
+                            'message='+pTar.querySelector('textarea[name=message]').value,'title='+pTar.querySelector('.form-title span').innerHTML],
+                        fn:function (resp) {
+                            resp=JSON.parse(resp||'{}');
+                            if(resp.code==0) pTar.querySelector('.form-thanks').style.display='block';
+                        }})
+            }
+            if(pTar.classList.contains('form-feedback')){
+                var _services=pTar.querySelector('.form-service .service-options li.selected');
+                if (!_services){
+                    swal('',decodeURIComponent(pTar.querySelector('.form-service span').dataset.service),'error');
+                    return false;
+                }
+                ibjax('POST','https://api.instabio.cc/apiv2.0/share/link/{linkid}/submit/feedback/'.Compile({linkid:__data.bio.id}),
+                    {data:['email='+email,'name='+pTar.querySelector('input[name=fullname]').value,'service='+decodeURIComponent(pTar.querySelector('.form-service span').dataset.service),
+                            'phone='+pTar.querySelector('input[name=phone]').value,'message='+pTar.querySelector('textarea[name=message]').value,
+                            'subject='+_services.querySelector('span').innerHTML,'title='+pTar.querySelector('.form-title span').innerHTML],
+                        fn:function (resp) {
+                            resp=JSON.parse(resp||'{}');
+                            if(resp.code==0) pTar.querySelector('.form-thanks').style.display='block';
+                        }})
+            }
+            if(pTar.classList.contains('form-appl')){
+                var _services=pTar.querySelector('.form-service .service-options li.selected');
+                if (!_services){
+                    swal('',decodeURIComponent(pTar.querySelector('.form-service span').dataset.service),'error');
+                    return false;
+                }
+                ibjax('POST','https://api.instabio.cc/apiv2.0/share/link/{linkid}/submit/appl/'.Compile({linkid:__data.bio.id}),
+                    {data:['email='+email,'name='+pTar.querySelector('input[name=fullname]').value,'service='+decodeURIComponent(pTar.querySelector('.form-service span').dataset.service),
+                            'phone='+pTar.querySelector('input[name=phone]').value,'message='+pTar.querySelector('textarea[name=message]').value,
+                            'subject='+_services.querySelector('span').innerHTML,'title='+pTar.querySelector('.form-title span').innerHTML],
+                        fn:function (resp) {
+                            resp=JSON.parse(resp||'{}');
+                            if(resp.code==0) pTar.querySelector('.form-thanks').style.display='block';
+                        }})
+            }
+            if(pTar.classList.contains('form-quote')){
+                var _services=pTar.querySelector('.form-service .service-options li.selected');
+                if (!_services){
+                    swal('',decodeURIComponent(pTar.querySelector('.form-service span').dataset.service),'error');
+                    return false;
+                }
+                ibjax('POST','https://api.instabio.cc/apiv2.0/share/link/{linkid}/submit/quote/'.Compile({linkid:__data.bio.id}),
+                    {data:['email='+email,'name='+pTar.querySelector('input[name=fullname]').value,'service='+decodeURIComponent(pTar.querySelector('.form-service span').dataset.service),
+                            'phone='+pTar.querySelector('input[name=phone]').value,'message='+pTar.querySelector('textarea[name=message]').value,
+                            'subject='+_services.querySelector('span').innerHTML,'title='+pTar.querySelector('.form-title span').innerHTML],
+                        fn:function (resp) {
+                            resp=JSON.parse(resp||'{}');
+                            if(resp.code==0) pTar.querySelector('.form-thanks').style.display='block';
+                        }})
+            }
+            if(pTar.classList.contains('form-appt')){
+                var _preferredDate=pTar.querySelector('#tmpl-form-date'),_preferredTime=pTar.querySelector('#tmpl-form-time');
+                if(!(parseInt(_preferredDate.innerHTML)&&parseInt(_preferredDate.innerHTML))){
+                    swal('', 'Please Select Preferred Datetime','error');
+                    return false;
+                }
+                ibjax('POST','https://api.instabio.cc/apiv2.0/share/link/{linkid}/submit/appt/'.Compile({linkid:__data.bio.id}),
+                    {data:['email='+email,'name='+pTar.querySelector('input[name=fullname]').value,
+                            'phone='+pTar.querySelector('input[name=phone]').value,'message='+pTar.querySelector('textarea[name=message]').value,
+                            'preferred='+_preferredDate.innerHTML+' '+_preferredTime.innerHTML,'title='+pTar.querySelector('.form-title span').innerHTML],
+                        fn:function (resp) {
+                            resp=JSON.parse(resp||'{}');
+                            if(resp.code==0) pTar.querySelector('.form-thanks').style.display='block';
+                        }})
+            }
+            if(pTar.classList.contains('form-rsvp')){
+                var _services=pTar.querySelector('.form-option .option-cycle.selected');
+                if (!_services){
+                    swal('',pTar.querySelector('.form-service span').innerText,'error');
+                    return false;
+                }
+                ibjax('POST','https://api.instabio.cc/apiv2.0/share/link/{linkid}/submit/rsvp/'.Compile({linkid:__data.bio.id}),
+                    {data:['email='+email,'name='+pTar.querySelector('input[name=fullname]').value,'subject='+_services.innerHTML,
+                            'service='+pTar.querySelector('.form-service span').innerText,'title='+pTar.querySelector('.form-title span').innerHTML],
+                        fn:function (resp) {
+                            resp=JSON.parse(resp||'{}');
+                            if(resp.code==0) pTar.querySelector('.form-thanks').style.display='block';
+                        }})
+            }
+        }
+    }
+    var c = function(e) {
+        //window.event? window.event.cancelBubble = true : e.stopPropagation();
+        var _fbe=e.target||e.srcElement||{},_fte=e.target||e.srcElement||{},_tmpl=null;
+        if(_fbe.href && _fbe.nodeName=='A'){
+        }else if(_fbe.nodeName=='IMG'||_fbe.nodeName=='SPAN'||_fbe.nodeName=='I'||_fbe.nodeName=='P'){
+            _fbe=_fbe.parentElement;
+        }else{
+        }
+        if (_fbe.dataset&&_fbe.dataset.html&&window.fbq) {
+            fbq('track', 'linkClick');
+            return;
+        }
+        if(_fbe.dataset.type==10&&_fbe.dataset.st){//show form
+            if(window.fbq) fbq('track', 'formClick');
+            var _fc=d.querySelector('#form-tmpl-container');
+            if(!_fc){_fc=d.createElement('div');_fc.id='form-tmpl-container';_fc.className='form-tmpl-container';d.body.appendChild(_fc);}
+            var _cssDom=d.querySelector('#lnk-form-tmpl');
+            if(_fbe.dataset.path){
+                if(!_cssDom){
+                    _cssDom=d.createElement('link');
+                    _cssDom.id='lnk-form-tmpl';
+                    _cssDom.rel='stylesheet';
+                    _cssDom.type='text/css';
+                    d.head.appendChild(_cssDom);
+                }
+                _cssDom.href='https://instabio.cc/static/theme/tmpl/form/'+_fbe.dataset.path+'.css';
+            }else{
+                if(_cssDom) _cssDom.remove();
+            }
+            var _style=d.querySelector('#style-form-tmpl'),_css='';
+            if(_style) _style.remove();
+            _style=d.createElement('style');
+            _style.id='style-form-tmpl';
+            _style.type='text/css';
+            d.querySelector('head').appendChild(_style);
+            var __form=JSON.parse(decodeURIComponent(_fbe.dataset.txt||'')||'{}');
+            if(__form.color) _css+='--form-tmpl-color:'+__form.color+';';
+            if(__form.radius) _css+='--form-tmpl-radius:calc(var(--form-tmpl-height-default) * '+__form.radius+' / 100);';
+            if(__form.font) _css+='--form-tmpl-font:"'+__form.font+'";';
+            _style.innerHTML=d.querySelector('#form-tmpl-css').innerHTML.Compile({css:_css});
+            var tmpl=d.querySelector('#form-tmpl-'+_fbe.dataset.st);
+            if(tmpl){
+                _tmpl=_fc.querySelector('.form-tmpl');
+                if(_fbe.dataset.kid==(_tmpl ? _tmpl.dataset.kid : '')){
+                    _fc.style.display='block';
+                    _tmpl.classList.remove('animate__fadeOutDown');
+                    _tmpl.classList.add('animate__fadeInUp');
+                    return;
+                }
+                _fc.innerHTML=d.querySelector('#form-tmpl-ct').innerHTML;
+                _tmpl=_fc.querySelector('.form-tmpl');
+                if(_fbe.dataset.st==7){
+                    var tmplOption=d.querySelector('#form-tmpl-7-option').innerHTML;
+                    __form.options='';
+                    (__form.services||[]).forEach(function(val,idx){
+                        __form.options+=tmplOption.Compile({text:val,idx:idx});
+                    });
+                    _tmpl.innerHTML+=tmpl.innerHTML.Compile(__form);
+                }else{
+                    if(__form.services&&__form.services.length>0){
+                        __form.lis='';
+                        var tmplOption=d.querySelector('#form-tmpl-service-option').innerHTML;
+                        (__form.services||[]).forEach(function(val,idx){
+                            __form.lis+=tmplOption.Compile({text:val});
+                        });
+                        __form.serviceEncode=encodeURIComponent(__form.service||'');
+                    }
+                    d.querySelector('.form-tmpl').innerHTML+=tmpl.innerHTML.Compile(__form);
+                }
+                _fc.style.display='block';
+                if(_fbe.dataset.st==6){
+                    var start={},end={};
+                    jeDate("#tmpl-form-date",{
+                        isinitVal:false,
+                        initDate:[{DD:"0"},true],
+                        festival: false,
+                        format: 'YYYY-MM-DD',
+                        // donefun: function(obj){
+                        //     end.minDate = obj.val; //开始日选好后，重置结束日的最小日期
+                        // }
+                    });
+                    d.querySelector('#tmpl-form-date').dataset.dateval=jeDate.nowDate();
+                    jeDate("#tmpl-form-time",{
+                        isinitVal:false,
+                        festival: false,
+                        format: 'hh:mm:ss',
+                        // minDate: function (that) {
+                            // var nowMinDate = jeDate.valText('#filter-start') == "" && jeDate.valText(that.valCell) == "";
+                            // return nowMinDate ? jeDate.nowDate({DD:0}) : end.minDate ;
+                        // },
+                    });
+                }
+            }
+            return;
+        }
+    };
+    var c1=function (e) {
+        window.event? window.event.cancelBubble = true : e.stopPropagation();
+        var _fbe=e.target||e.srcElement||{},_fte=e.target||e.srcElement||{},_tmpl=null;
+         _fbe=_fbe.parentElement;
+         if(_fte.nodeName=='I'&&_fte.classList.contains('icon-close')){//form click - close
+            _tmpl=d.querySelector('.form-tmpl');
+            if(_tmpl) {
+                _tmpl.classList.remove('animate__fadeInUp');_tmpl.classList.add('animate__fadeOutDown');
+                setTimeout(function () {
+                    d.querySelector('#form-tmpl-container').style.display='none';
+                }, 500);
+                if(d.querySelector('.form-tmpl .service-options')) d.querySelector('.form-tmpl .service-options').style.display='none';
+            }
+            return;
+        }
+        if(_fte.nodeName=='I'&&_fte.classList.contains('icon-zhankai')){//form click - service - select
+            _tmpl=d.querySelector('.form-tmpl .service-options');
+            if(_tmpl){
+                if(getComputedStyle(_tmpl).display=='none'){
+                    _tmpl.style.display='block';
+                }else{
+                    _tmpl.style.display='none';
+                }
+            }
+            return;
+        }
+        if(_fte.nodeName=='SPAN'&&_fte.hasAttribute('data-service')){//form click - service - select
+            _tmpl=d.querySelector('.form-tmpl .service-options');
+            if(_tmpl){
+                if(getComputedStyle(_tmpl).display=='none'){
+                    _tmpl.style.display='block';
+                }else{
+                    _tmpl.style.display='none';
+                }
+            }
+            return;
+        }
+        if((_fte.nodeName=='LI'&&_fte.classList.contains('service-option'))||(_fbe.nodeName=='LI'&&_fbe.classList.contains('service-option'))){//form click - service - option
+            if(_fte.classList.contains('service-option')){
+                _fte.parentElement.querySelectorAll('li').forEach(function (ele,idx) {
+                    ele.classList.remove('selected');
+                });
+                _fte.classList.add('selected');
+                d.querySelector('.form-tmpl .form-select span').innerHTML=_fte.querySelector('span').innerHTML+'<i class="iconfont icon-zhankai"></i>';
+            }
+            if(_fbe.classList.contains('service-option')){
+                _fbe.parentElement.querySelectorAll('li').forEach(function (ele,idx) {
+                    ele.classList.remove('selected');
+                });
+                _fbe.classList.add('selected');
+                d.querySelector('.form-tmpl .form-select span').innerHTML=_fbe.querySelector('span').innerHTML+'<i class="iconfont icon-zhankai"></i>';
+            }
+            _tmpl=d.querySelector('.form-tmpl .service-options');
+            if(_tmpl) _tmpl.style.display='none';
+            return;
+        }
+        if(_fte.nodeName=='SPAN'&&_fte.classList.contains('option-cycle')){//form click - service - option
+            _fte.parentElement.parentElement.querySelectorAll('.option-cycle').forEach(function (ele,idx) {
+                ele.classList.remove('selected');
+            });
+            _fte.classList.add('selected');
+            return;
+        }
+        if(_fte.nodeName=='BUTTON'&&_fbe.classList.contains('form-button')){//form click - submit
+            handleSubmit(e);
+            return;
+        }
+    };
+    if(__data.gstag&&__data.gstag.pixel){
+        var noscript=d.createElement('noscript');
+        noscript.innerHTML='<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='+__data.gstag.pixel+'&ev=PageView&noscript=1"/>';
+        fjs.parentNode.insertBefore(noscript, fjs);
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', __data.gstag.pixel);
+        fbq('track', 'PageView');
+    }
+    v("click", c, d.querySelector('.container'));
+    v("click", c1, d.querySelector('#form-tmpl-container'));
+}(document, 'script'));

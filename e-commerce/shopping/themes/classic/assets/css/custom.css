@@ -1,0 +1,40 @@
+/*
+ * Custom code goes here.
+ * A template should always ship with an empty custom.css
+ */
+
+ .carousel .carousel-inner {
+    height: 500px; 
+}
+
+
+ /*------------------max-width: 768px------------------*/
+@media (max-width: 768px) {
+
+/*-----Products thumbnail grid-----*/
+    #products .thumbnail-container,.featured-products .thumbnail-container,.product-accessories .thumbnail-container,.product-miniature .thumbnail-container {
+        width: 142px;
+        height: 208px;
+    }
+
+    #products .product-description,.featured-products .product-description,.product-accessories .product-description,.product-miniature .product-description,
+    #products .highlighted-informations,.featured-products .highlighted-informations,.product-accessories .highlighted-informations,.product-miniature .highlighted-informations {
+        width: 140px;
+    }
+
+    .product-thumbnail img {
+        width: 135px;
+    }
+
+    .featured-products .product-title {
+        margin-top: 3px;
+    }
+
+    .carousel .carousel-inner {
+        height: auto;
+    }
+}
+
+   
+
+   

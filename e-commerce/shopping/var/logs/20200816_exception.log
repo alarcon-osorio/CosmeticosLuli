@@ -1,0 +1,2 @@
+*ERROR* 	v1.7.6.7	2020/08/16 - 00:04:26: Link to database cannot be established: SQLSTATE[HY000] [1045] Access denied for user &#039;u644237725_LuliCosmetics&#039;@&#039;127.0.0.1&#039; (using password: YES) at line 127 in file classes/db/DbPDO.php
+*ERROR* 	v1.7.6.7	2020/08/16 - 00:04:27: Link to database cannot be established: SQLSTATE[HY000] [1045] Access denied for user &#039;u644237725_LuliCosmetics&#039;@&#039;127.0.0.1&#039; (using password: YES) at line 127 in file classes/db/DbPDO.php
