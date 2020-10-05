@@ -26,10 +26,10 @@
 	<tr>
 		<td width="32%">
 			<b>Dirección de Remitencia</b><br/><br/>
-			Cosméticos Luli <br/>
-			Bogotá D.C - Centro<br/>			
-			Bogotá D.C<br/>
-			Colombia<br/>
+			Cosméticos Luli <br/> 
+			Yulieth Alarcon Osorio<br/>
+			Carrera 3a Bis # 3a - 48<br/>
+			Bogotá D.C - Colombia<br/>
 			3003054590<br/>
 		</td>
 		<td width="36%">{if $delivery_address}<span class="bold">{l s='Delivery Address' d='Shop.Pdf' pdf='true'}</span><br/><br/>
